@@ -13,6 +13,13 @@ Ce projet implémente une interface d'authentification persistante permettant la
 3. Lancer l'application :
    L'application peut être lancée en ouvrant directement le fichier index.html dans un navigateur ou via un serveur local (type Live Server).
 
+## Sécurité et Confidentialité
+
+Contrairement à un formulaire classique, ce projet intègre des mécanismes de protection des données :
+
+- **Hachage Cryptographique** : Les mots de passe sont hachés avant tout stockage ou comparaison.
+- **Persistance Sécurisée** : Les données sont stockées dans le **localStorage** et les mots de passe restent illisibles grâce au hachage.
+
 ## Guide d'utilisation pour l'évaluation
 
 Les fonctionnalités suivantes peuvent être testées par le correcteur :
@@ -28,8 +35,8 @@ Les fonctionnalités suivantes peuvent être testées par le correcteur :
    - Le système confirme l'enregistrement et le compte devient immédiatement actif pour une connexion.
 
 3. Vérification de la persistance des données :
-   - Après avoir créé un compte, actualisez la page (touche F5).
-   - Tentez de vous connecter avec le compte créé : l'accès est maintenu grâce à l'utilisation du localStorage.
+   - Après avoir créé un compte, actualisez la page.
+   - Tentez de vous connecter avec le compte créé.
 
 4. Réinitialisation :
    - Le bouton "Réinitialiser" vide les champs de saisie et réinitialise le panneau de statut.
