@@ -19,7 +19,7 @@ Les fonctionnalités suivantes peuvent être testées par le correcteur :
 
 1. Connexion avec les identifiants par défaut :
    - Identifiant : admin
-   - Mot de passe : password
+   - Mot de passe : password123
    - Cliquez sur le bouton "Valider".
 
 2. Création d'un nouveau compte :
