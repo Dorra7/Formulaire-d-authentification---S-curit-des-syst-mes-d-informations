@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rendu SSI - Formulaire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="form-container">
+        <div class="logo-box">
+            <span class="logo-text">Logo</span>
+        </div>
+        
+        <form id="loginForm">
+            <div id="inputs-container">
+                <input type="text" id="username" placeholder="identifiant" required>
+                <input type="password" id="password" placeholder="Mot de passse" required>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn" onclick="resetFields()">Reset</button>
+                <button type="button" class="btn" onclick="validate()">Valider</button>
+                <button type="button" class="btn" onclick="addAccount()">Ajout Compte</button>
+            </div>
+        </form>
+
+        <div id="message-area">
+            <p id="label-msg">Message :</p>
+            <p id="content-msg"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
