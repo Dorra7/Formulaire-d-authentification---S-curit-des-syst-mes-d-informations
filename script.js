@@ -1,36 +1,48 @@
-/**
- * GESTIONNAIRE DE DONNÉES (Simulation de Base de Données)
- * Utilise le localStorage pour la persistance des comptes.
- */
+
+//SÉCURITÉ - Hachage de mot de passe 
+ 
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Simulation de Base de Données
+
 const storageService = {
     DB_NAME: 'tp1_ssi',
 
-    // Initialise avec un compte administrateur par défaut
-    init() {
+    // Initialisation avec un compte administrateur (haché par sécurité)
+    async init() {
         if (!localStorage.getItem(this.DB_NAME)) {
-            const defaultUsers = [{ login: "admin", pass: "password" }];
+            // Assure-toi que le nom de la variable ici correspond à celui utilisé en dessous
+            const hashedAdminPass = await hashPassword("password123"); 
+            const defaultUsers = [{ login: "admin", pass: hashedAdminPass }];
             localStorage.setItem(this.DB_NAME, JSON.stringify(defaultUsers));
         }
     },
 
     getUsers() {
-        return JSON.parse(localStorage.getItem(this.DB_NAME));
+        const data = localStorage.getItem(this.DB_NAME);
+        return data ? JSON.parse(data) : [];
     },
 
-    saveUser(login, pass) {
+    async saveUser(login, pass) {
         const users = this.getUsers();
-        // Vérification si l'utilisateur existe déjà
         if (users.find(u => u.login === login)) return false;
         
-        users.push({ login, pass });
+        // Hachage du mot de passe avant stockage
+        const hashedPassword = await hashPassword(pass);
+        users.push({ login, pass: hashedPassword });
+        
         localStorage.setItem(this.DB_NAME, JSON.stringify(users));
         return true;
     }
 };
 
-
-  // GESTIONNAIRE D'INTERFACE (UI)
- 
+// INTERFAce UTILISATEUR 
 const uiController = {
     messageElement: document.getElementById('feedback-message'),
     fieldsContainer: document.getElementById('dynamic-fields'),
@@ -43,22 +55,22 @@ const uiController = {
     reset() {
         document.getElementById('authForm').reset();
         this.displayMessage("En attente d'action...", "message-placeholder");
-        // Optionnel : supprimer les champs ajoutés dynamiquement
-        const extraFields = this.fieldsContainer.querySelectorAll('.dynamic-input');
+        // Suppression des champs dynamiques si nécessaire
+        const extraFields = this.fieldsContainer.querySelectorAll('.dynamic-input-wrapper');
         extraFields.forEach(field => field.remove());
     },
 
-    // Fonction pour "Ajouter un compte" 
-    addField() {
+    async addField() {
         const newLogin = prompt("Création de compte - Entrez un identifiant :");
         const newPass = prompt("Création de compte - Entrez un mot de passe :");
 
         if (!newLogin || !newPass) {
-            this.displayMessage("Opération annulée : champs incomplets.", "error");
+            this.displayMessage("Opération annulée : informations manquantes.", "error");
             return;
         }
 
-        if (storageService.saveUser(newLogin, newPass)) {
+        const success = await storageService.saveUser(newLogin, newPass);
+        if (success) {
             this.displayMessage(`Compte '${newLogin}' créé avec succès.`, "success");
         } else {
             this.displayMessage("Erreur : Cet identifiant est déjà utilisé.", "error");
@@ -66,22 +78,33 @@ const uiController = {
     }
 };
 
-// SERVICE D'AUTHENTIFICATION
+//SERVICE D'AUTHENTIFICATION
+
 const authService = {
-    validate() {
+    async validate() {
         const user = document.getElementById('username').value;
         const pass = document.getElementById('password').value;
-        const users = storageService.getUsers();
 
-        const authenticatedUser = users.find(u => u.login === user && u.pass === pass);
+        if (!user || !pass) {
+            uiController.displayMessage("Veuillez remplir tous les champs.", "error");
+            return;
+        }
+
+        const users = storageService.getUsers();
+        
+        // Hachage de la saisie pour comparaison avec la base locale
+        const inputHash = await hashPassword(pass);
+        const authenticatedUser = users.find(u => u.login === user && u.pass === inputHash);
 
         if (authenticatedUser) {
-            uiController.displayMessage(`Authentification réussie. Bienvenue, ${user}.`, "success");
+            uiController.displayMessage(`Authentification réussie. Session établie pour ${user}.`, "success");
         } else {
-            uiController.displayMessage("Échec de l'authentification. Identifiants invalides.", "error");
+            uiController.displayMessage("Échec : Identifiants invalides ou inexistants.", "error");
         }
     }
 };
 
-// Initialisation au chargement de la page
-window.onload = () => storageService.init();
+// Initialisation sécurisée au chargement
+window.onload = async () => {
+    await storageService.init();
+};
