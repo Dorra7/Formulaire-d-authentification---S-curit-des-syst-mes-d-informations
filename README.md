@@ -43,6 +43,6 @@ Les fonctionnalités suivantes peuvent être testées par le correcteur :
 
 ## Détails techniques
 
-Le projet est réalisé en HTML5, CSS3 et JavaScript Vanilla. La persistance est assurée par l'API Web Storage (localStorage), permettant de répondre à la contrainte d'absence de base de données externe tout en conservant les données entre les sessions.
+Le projet est réalisé en HTML5, CSS3 et JavaScript Vanilla. La persistance est assurée par l'API Web Storage (localStorage) et les mots de passe sont hachés via l'API SubtleCrypto (SHA-256), permettant de répondre à la contrainte d'absence de base de données externe tout en conservant les données entre les sessions.
 
 ---
