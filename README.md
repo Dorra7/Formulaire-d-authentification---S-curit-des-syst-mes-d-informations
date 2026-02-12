@@ -12,13 +12,13 @@ Ce projet est une interface de connexion simple réalisée dans le cadre du modu
 
 ## Réalisation Technique
 
-- **Frontend** : HTML5 / CSS3 (Vanilla)
-- **Logique** : JavaScript (Vanilla - sans framework)
-- **Architecture** : Fichiers séparés pour une meilleure maintenance.
+- **Frontend** : HTML5 / CSS3
+- **Logique** : JavaScript (sans framework)
+- **Architecture** : Fichiers séparés visibilité.
 
 ## Installation et Utilisation
 
 1. Cloner le dépôt :
    ```bash
-   git clone [https://github.com/ton-pseudo/nom-du-repo.git](https://github.com/ton-pseudo/nom-du-repo.git)
+   git clone [https://github.com/Dorra7/Formulaire-d-authentification---S-curit-des-syst-mes-d-informations.git]
    ```
